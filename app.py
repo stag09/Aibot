@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 st.markdown(
     """
     <style>
-    /* Stylish gradient background */
+    /* Cool blue-green gradient background */
     .stApp {
-        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-        color: #000 !important;  /* Make all text black */
+        background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+        color: #000 !important;  /* Black text */
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
@@ -26,15 +26,15 @@ st.markdown(
 
     /* User bubble */
     .stChatMessage.user {
-        background-color: #fff3e0;
-        border-left: 5px solid #ff9800;
+        background-color: #d0f0fd;
+        border-left: 5px solid #2196f3;
         color: #000 !important;
     }
 
     /* Assistant bubble */
     .stChatMessage.assistant {
-        background-color: #e3f2fd;
-        border-left: 5px solid #2196f3;
+        background-color: #a3d8f4;
+        border-left: 5px solid #0d47a1;
         color: #000 !important;
     }
 
@@ -43,14 +43,14 @@ st.markdown(
         background-color: white;
         color: #000 !important;
         border-radius: 10px;
-        border: 1px solid #ccc;
+        border: 1px solid #2196f3;
         font-size: 16px;
     }
 
     /* Title */
     h1 {
         text-align: center;
-        color: #222; /* dark black */
+        color: #003366; /* Dark navy */
         font-weight: bold;
         margin-bottom: 20px;
     }
