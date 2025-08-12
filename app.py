@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 st.markdown(
     """
     <style>
-    /* Page background */
+    /* Stylish gradient background */
     .stApp {
-        background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
-        color: #333;
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+        color: #000 !important;  /* Make all text black */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* Chat bubbles */
@@ -20,33 +21,38 @@ st.markdown(
         margin-bottom: 8px;
         font-size: 16px;
         line-height: 1.4;
+        color: #000 !important; /* Black text inside bubbles */
     }
 
     /* User bubble */
     .stChatMessage.user {
         background-color: #fff3e0;
         border-left: 5px solid #ff9800;
+        color: #000 !important;
     }
 
     /* Assistant bubble */
     .stChatMessage.assistant {
         background-color: #e3f2fd;
         border-left: 5px solid #2196f3;
+        color: #000 !important;
     }
 
     /* Chat input box */
     div[data-baseweb="textarea"] > textarea {
         background-color: white;
-        color: #333 !important;
+        color: #000 !important;
         border-radius: 10px;
         border: 1px solid #ccc;
+        font-size: 16px;
     }
 
     /* Title */
     h1 {
         text-align: center;
-        color: #00796b;
+        color: #222; /* dark black */
         font-weight: bold;
+        margin-bottom: 20px;
     }
     </style>
     """,
@@ -94,4 +100,3 @@ if prompt := st.chat_input("Type your question..."):
 
     # Save assistant message
     st.session_state.messages.append({"role": "assistant", "content": reply})
-    
