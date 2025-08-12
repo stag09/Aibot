@@ -69,7 +69,7 @@ co = cohere.Client(cohere_api_key)
 
 # Page config
 st.set_page_config(page_title="Cohere Chatbot", page_icon="🤖")
-st.title("💬 AI Chatbot 🤖")
+st.title("💬 AI ChatAgent 🤖")
 
 # Store messages in session
 if "messages" not in st.session_state:
