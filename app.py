@@ -3,7 +3,7 @@ import cohere
 import os
 from dotenv import load_dotenv
 
-# ------------------- Custom Styling -------------------
+
 st.markdown(
     """
     <style>
@@ -52,7 +52,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# --------------------------------------------------------
+
 
 # Load environment variables
 load_dotenv()
