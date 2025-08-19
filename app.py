@@ -63,7 +63,7 @@ st.markdown(
 load_dotenv()
 cohere_api_key = os.getenv("COHERE_API_KEY")
 
-# Initialize Cohere client (V2 is 2025 version)
+# Initialize Cohere client (V2 SDK - 2025)
 co = cohere.ClientV2(api_key=cohere_api_key)
 
 # ================= Streamlit Page =================
@@ -86,13 +86,14 @@ if prompt := st.chat_input("Type your question..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Get Cohere response
+    # Get Cohere response (✅ fixed to co.chat)
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = co.generate(
-                model="command-r-plus",
-                prompt=prompt,
-                max_tokens=3000
+            response = co.chat(
+                model="command-a-03-2025",   # 🔥 latest updated model
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
             )
             reply = response.message.content[0].text.strip()
             st.markdown(reply)
