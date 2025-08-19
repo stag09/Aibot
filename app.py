@@ -1,20 +1,18 @@
 import streamlit as st
 import cohere
 import os
+import requests
 from dotenv import load_dotenv
 
 # ================= CSS Styling ==================
 st.markdown(
     """
     <style>
-    /* Cool blue-green gradient background */
     .stApp {
         background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
         color: #000 !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
-    /* Chat bubbles */
     .stChatMessage {
         padding: 12px;
         border-radius: 12px;
@@ -23,22 +21,14 @@ st.markdown(
         line-height: 1.4;
         color: #000 !important;
     }
-
-    /* User bubble */
     .stChatMessage.user {
         background-color: #d0f0fd;
         border-left: 5px solid #2196f3;
-        color: #000 !important;
     }
-
-    /* Assistant bubble */
     .stChatMessage.assistant {
         background-color: #a3d8f4;
         border-left: 5px solid #0d47a1;
-        color: #000 !important;
     }
-
-    /* Chat input box */
     div[data-baseweb="textarea"] > textarea {
         background-color: white;
         color: #000 !important;
@@ -46,8 +36,6 @@ st.markdown(
         border: 1px solid #2196f3;
         font-size: 16px;
     }
-
-    /* Title */
     h1 {
         text-align: center;
         color: #003366;
@@ -63,7 +51,7 @@ st.markdown(
 load_dotenv()
 cohere_api_key = os.getenv("COHERE_API_KEY")
 
-# Initialize Cohere client (V2 SDK - 2025)
+# Initialize Cohere client (V2 SDK)
 co = cohere.ClientV2(api_key=cohere_api_key)
 
 # ================= Streamlit Page =================
@@ -79,6 +67,18 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+# ================= Helper: Live Data Fetch =================
+def fetch_live_info(query):
+    try:
+        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{query.replace(' ', '_')}"
+        res = requests.get(url, timeout=5)
+        if res.status_code == 200:
+            data = res.json()
+            return data.get("extract", "")
+    except:
+        pass
+    return ""
+
 # ================= User Input =================
 if prompt := st.chat_input("Type your question..."):
     # Save user message
@@ -86,14 +86,17 @@ if prompt := st.chat_input("Type your question..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Get Cohere response (✅ fixed to co.chat)
+    # Get live info
+    live_info = fetch_live_info(prompt)
+
+    # Cohere response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             response = co.chat(
-                model="command-a-03-2025",   # 🔥 latest updated model
+                model="command-a-03-2025",  # Latest model
                 messages=[
-                    {"role": "user", "content": prompt}
-                ],
+                    {"role": "user", "content": f"{prompt}. Context: {live_info}"}
+                ]
             )
             reply = response.message.content[0].text.strip()
             st.markdown(reply)
