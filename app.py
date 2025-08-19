@@ -4,7 +4,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# ================= CSS Styling ==================
+
 st.markdown(
     """
     <style>
@@ -47,16 +47,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ================= Load API Key =================
+
 load_dotenv()
 cohere_api_key = os.getenv("COHERE_API_KEY")
 co = cohere.ClientV2(api_key=cohere_api_key)
 
-# ================= Streamlit Page =================
+
 st.set_page_config(page_title="Cohere Chatbot", page_icon="🤖")
 st.title("💬 AI ChatAgent with Live Data 🤖")
 
-# ================= Helper: Live Wikipedia Fetch =================
+
 def fetch_live_info(query):
     """Fetch summary from Wikipedia for live updates"""
     try:
@@ -69,7 +69,7 @@ def fetch_live_info(query):
         return ""
     return ""
 
-# ================= Memory =================
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -78,7 +78,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# ================= Chat =================
+
 if prompt := st.chat_input("Ask me anything..."):
     # Save user message
     st.session_state.messages.append({"role": "user", "content": prompt})
