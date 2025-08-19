@@ -91,7 +91,7 @@ if prompt := st.chat_input("Type your question..."):
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             response = co.generate(
-                model="command-r-plus",
+                model="command-a-03-2025",
                 prompt=prompt,
                 max_tokens=3000
             )
