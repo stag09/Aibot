@@ -50,15 +50,26 @@ st.markdown(
 # ================= Load API Key =================
 load_dotenv()
 cohere_api_key = os.getenv("COHERE_API_KEY")
-
-# Initialize Cohere client (V2 SDK)
 co = cohere.ClientV2(api_key=cohere_api_key)
 
 # ================= Streamlit Page =================
 st.set_page_config(page_title="Cohere Chatbot", page_icon="🤖")
-st.title("💬 AI ChatAgent 🤖")
+st.title("💬 AI ChatAgent with Live Data 🤖")
 
-# Store messages in session
+# ================= Helper: Live Wikipedia Fetch =================
+def fetch_live_info(query):
+    """Fetch summary from Wikipedia for live updates"""
+    try:
+        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{query.replace(' ', '_')}"
+        res = requests.get(url, timeout=5)
+        if res.status_code == 200:
+            data = res.json()
+            return data.get("extract", "")
+    except Exception:
+        return ""
+    return ""
+
+# ================= Memory =================
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -67,38 +78,29 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# ================= Helper: Live Data Fetch =================
-def fetch_live_info(query):
-    try:
-        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{query.replace(' ', '_')}"
-        res = requests.get(url, timeout=5)
-        if res.status_code == 200:
-            data = res.json()
-            return data.get("extract", "")
-    except:
-        pass
-    return ""
-
-# ================= User Input =================
-if prompt := st.chat_input("Type your question..."):
+# ================= Chat =================
+if prompt := st.chat_input("Ask me anything..."):
     # Save user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Get live info
+    # Step 1: Try live Wikipedia data
     live_info = fetch_live_info(prompt)
 
-    # Cohere response
+    # Step 2: Ask Cohere with live info injected
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             response = co.chat(
-                model="command-a-03-2025",  # Latest model
-                messages=[
-                    {"role": "user", "content": f"{prompt}. Context: {live_info}"}
-                ]
+                model="command-a-03-2025",  # ✅ latest chat model
+                messages=[{"role": "user", "content": f"Question: {prompt}\n\nLive Data: {live_info}"}]
             )
             reply = response.message.content[0].text.strip()
+
+            # Prefer Wikipedia if available
+            if live_info:
+                reply = f"{live_info}\n\n(Source: Wikipedia)\n\nCohere adds: {reply}"
+
             st.markdown(reply)
 
     # Save assistant message
