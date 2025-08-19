@@ -3,14 +3,14 @@ import cohere
 import os
 from dotenv import load_dotenv
 
-
+# ================= CSS Styling ==================
 st.markdown(
     """
     <style>
     /* Cool blue-green gradient background */
     .stApp {
         background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
-        color: #000 !important;  /* Black text */
+        color: #000 !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
@@ -21,7 +21,7 @@ st.markdown(
         margin-bottom: 8px;
         font-size: 16px;
         line-height: 1.4;
-        color: #000 !important; /* Black text inside bubbles */
+        color: #000 !important;
     }
 
     /* User bubble */
@@ -50,7 +50,7 @@ st.markdown(
     /* Title */
     h1 {
         text-align: center;
-        color: #003366; /* Dark navy */
+        color: #003366;
         font-weight: bold;
         margin-bottom: 20px;
     }
@@ -59,15 +59,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# Load environment variables
+# ================= Load API Key =================
 load_dotenv()
 cohere_api_key = os.getenv("COHERE_API_KEY")
 
-# Initialize Cohere client
-co = cohere.Client(cohere_api_key)
+# Initialize Cohere client (V2 is 2025 version)
+co = cohere.ClientV2(api_key=cohere_api_key)
 
-# Page config
+# ================= Streamlit Page =================
 st.set_page_config(page_title="Cohere Chatbot", page_icon="🤖")
 st.title("💬 AI ChatAgent 🤖")
 
@@ -80,7 +79,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# User input
+# ================= User Input =================
 if prompt := st.chat_input("Type your question..."):
     # Save user message
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -90,12 +89,14 @@ if prompt := st.chat_input("Type your question..."):
     # Get Cohere response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = co.generate(
-                model="command-r-plus",
-                prompt=prompt,
-                max_tokens=3000
+            response = co.chat(
+                model="command-a-03-2025",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant. Always use the most accurate and up-to-date information."},
+                    {"role": "user", "content": prompt}
+                ],
             )
-            reply = response.generations[0].text.strip()
+            reply = response.message.content[0].text.strip()
             st.markdown(reply)
 
     # Save assistant message
