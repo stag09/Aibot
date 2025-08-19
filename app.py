@@ -89,12 +89,10 @@ if prompt := st.chat_input("Type your question..."):
     # Get Cohere response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = co.chat(
-                model="command-a-03-2025",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant. Always use the most accurate and up-to-date information."},
-                    {"role": "user", "content": prompt}
-                ],
+            response = co.generate(
+                model="command-r-plus",
+                prompt=prompt,
+                max_tokens=3000
             )
             reply = response.message.content[0].text.strip()
             st.markdown(reply)
