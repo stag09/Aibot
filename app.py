@@ -54,7 +54,7 @@ co = cohere.ClientV2(api_key=cohere_api_key)
 
 
 st.set_page_config(page_title="Cohere Chatbot", page_icon="🤖")
-st.title("💬 AI ChatAgent with Live Data 🤖")
+st.title("💬 AI ChatAgent 🤖")
 
 
 def fetch_live_info(query):
